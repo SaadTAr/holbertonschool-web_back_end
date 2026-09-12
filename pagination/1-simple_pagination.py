@@ -6,11 +6,10 @@ from typing import List, Tuple
 
 
 def index_range(page: int, page_size: int) -> Tuple[int, int]:
-    """Return the start and end indexes for a pagination range."""
-    start_index = (page - 1) * page_size
-    end_index = start_index + page_size
-
-    return (start_index, end_index)
+    """Return start and end indexes for pagination."""
+    start = (page - 1) * page_size
+    end = page * page_size
+    return (start, end)
 
 
 class Server:
@@ -23,12 +22,11 @@ class Server:
         self.__dataset = None
 
     def dataset(self) -> List[List]:
-        """Return the cached dataset."""
+        """Return cached dataset."""
         if self.__dataset is None:
             with open(self.DATA_FILE) as f:
                 reader = csv.reader(f)
                 dataset = [row for row in reader]
-
             self.__dataset = dataset[1:]
 
         return self.__dataset
@@ -42,9 +40,9 @@ class Server:
         assert isinstance(page, int) and page > 0
         assert isinstance(page_size, int) and page_size > 0
 
-        start_index, end_index = index_range(page, page_size)
+        start, end = index_range(page, page_size)
 
-        if start_index >= len(self.dataset()):
+        if start >= len(self.dataset()):
             return []
 
-        return self.dataset()[start_index:end_index]
+        return self.dataset()[start:end]

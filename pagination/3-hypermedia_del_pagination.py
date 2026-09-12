@@ -16,18 +16,17 @@ class Server:
         self.__indexed_dataset = None
 
     def dataset(self) -> List[List]:
-        """Return the cached dataset."""
+        """Return cached dataset."""
         if self.__dataset is None:
             with open(self.DATA_FILE) as f:
                 reader = csv.reader(f)
                 dataset = [row for row in reader]
-
             self.__dataset = dataset[1:]
 
         return self.__dataset
 
     def indexed_dataset(self) -> Dict[int, List]:
-        """Return the dataset indexed by sorting position."""
+        """Return dataset indexed by sorting position."""
         if self.__indexed_dataset is None:
             dataset = self.dataset()
             self.__indexed_dataset = {
@@ -41,30 +40,27 @@ class Server:
         index: int = None,
         page_size: int = 10
     ) -> Dict:
-        """Return deletion-resilient pagination metadata."""
-        if index is None:
-            index = 0
-
+        """Return deletion-resilient pagination data."""
         assert isinstance(index, int)
         assert isinstance(page_size, int)
         assert index >= 0
-        assert index < len(self.dataset())
+        assert index < len(self.indexed_dataset())
         assert page_size > 0
 
         indexed_data = self.indexed_dataset()
-
         data = []
-        current_index = index
+        next_index = index
 
-        while len(data) < page_size and current_index < len(self.dataset()):
-            if current_index in indexed_data:
-                data.append(indexed_data[current_index])
+        for _ in range(page_size):
+            while next_index not in indexed_data:
+                next_index += 1
 
-            current_index += 1
+            data.append(indexed_data[next_index])
+            next_index += 1
 
         return {
             "index": index,
             "data": data,
-            "page_size": len(data),
-            "next_index": current_index
+            "page_size": page_size,
+            "next_index": next_index
         }
