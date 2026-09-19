@@ -1,5 +1,3 @@
-const listOfStudents = [];
-
 class HolbertonClass {
   constructor(year, location) {
     this._year = year;
@@ -38,10 +36,17 @@ class StudentHolberton {
 const class2019 = new HolbertonClass(2019, 'San Francisco');
 const class2020 = new HolbertonClass(2020, 'San Francisco');
 
-listOfStudents.push(new StudentHolberton('Guillaume', 'Salva', class2020));
-listOfStudents.push(new StudentHolberton('John', 'Doe', class2020));
-listOfStudents.push(new StudentHolberton('Albert', 'Clinton', class2019));
-listOfStudents.push(new StudentHolberton('Donald', 'Bush', class2019));
-listOfStudents.push(new StudentHolberton('Jason', 'Sandler', class2019));
+const listOfStudents = [
+  new StudentHolberton('Guillaume', 'Salva', class2020),
+  new StudentHolberton('John', 'Doe', class2020),
+  new StudentHolberton('Albert', 'Clinton', class2019),
+  new StudentHolberton('Donald', 'Bush', class2019),
+  new StudentHolberton('Jason', 'Sandler', class2019),
+];
+
+export {
+  HolbertonClass,
+  StudentHolberton,
+};
 
 export default listOfStudents;
